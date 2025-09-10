@@ -1,98 +1,143 @@
-# Unzip64
+# Flate
 
-A simple Go command line tool that reads base64-encoded, flate-compressed content from a file or stdin, decodes it, decompresses it, and prints the result to stdout.
+A simple Go command line tool that compresses or decompresses data using flate/deflate compression from a f1. **Input**: The tool reads data from either:
+   - A file specified as a command line argument
+   - Standard input (stdin) if no file is specified
+
+2. **Process**: The data is processed using:
+   - **Compression** (default): Compress input using raw deflate or zlib format (-z flag)
+   - **Decompression** (-d flag): Decompress using raw deflate or zlib format (-z flag)
+
+3. **Output**: The processed content is written to standard output (stdout)din.
 
 ## Features
 
-- Read base64 content from a specified file or from stdin
-- Decode base64 content
-- Decompress flate-compressed data
-- Output decompressed content to stdout
+- Compress data using raw deflate or zlib format
+- Decompress flate (zlib) or raw deflate compressed data
+- Read from a specified file or from stdin
+- Output to stdout
+- Support for both zlib format (-z flag) and raw deflate format (default)
 
 ## Installation
 
 ### Download pre-built binaries
 
-Pre-built binaries are available from the [releases page](https://github.com/fabricates/unzip64/releases). Nightly releases are automatically built and published.
+Pre-built binaries are available from the [releases page](https://github.com/fabricates/flate/releases). Nightly releases are automatically built and published.
 
 ### Build from source
 
 ```bash
-git clone https://github.com/fabricates/unzip64.git
-cd unzip64
+git clone https://github.com/fabricates/flate.git
+cd flate
 make build
 ```
 
 Or without Make:
 
 ```bash
-go build -o unzip64 .
+go build -o flate .
 ```
 
 ### Install using go install
 
 ```bash
-go install github.com/fabricates/unzip64@latest
+go install github.com/fabricates/flate@latest
 ```
 
 ## Usage
 
-### Read from a file
+### Compress a file (default behavior)
 
 ```bash
-./unzip64 input.txt
+./flate input.txt > compressed.bin
+```
+
+### Compress using zlib format
+
+```bash
+./flate -z input.txt > compressed.zlib
+```
+
+### Decompress a file
+
+```bash
+./flate -d compressed.bin
+```
+
+### Decompress zlib format
+
+```bash
+./flate -d -z compressed.zlib
 ```
 
 ### Read from stdin
 
 ```bash
-echo "base64-encoded-flate-content" | ./unzip64
+cat input.txt | ./flate > compressed.bin
 ```
 
+### Show help
+
 ```bash
-cat input.txt | ./unzip64
+./flate -h
 ```
 
 ## Examples
 
-### Example 1: Process a file containing base64-encoded flate data
+### Example 1: Compress and decompress text
 
 ```bash
-./unzip64 data.b64
+# Compress text with raw deflate
+echo "hello world!" | ./flate > compressed.bin
+
+# Decompress it back
+./flate -d compressed.bin
 ```
 
-### Example 2: Pipe base64 content through stdin
+### Example 2: Compress with zlib format
 
 ```bash
-echo "ykjNyclXKM8vyklRBAQAAP//" | ./unzip64
-```
+# Compress with zlib
+echo "hello world!" | ./flate -z > compressed.zlib
 
-This will output: `hello world!`
+# Decompress zlib
+./flate -d -z compressed.zlib
+```
 
 ### Example 3: Chain with other commands
 
 ```bash
-curl -s https://example.com/compressed.b64 | ./unzip64 > output.txt
+curl -s https://example.com/data.txt | ./flate -z | ./flate -d -z
+```
+
+### Example 4: Compress files
+
+```bash
+# Compress a file
+./flate largefile.txt > largefile.deflate
+
+# Decompress it
+./flate -d largefile.deflate > restored.txt
 ```
 
 ## How it works
 
-1. **Input**: The tool reads base64-encoded content from either:
+1. **Input**: The tool reads compressed binary data from either:
    - A file specified as a command line argument
    - Standard input (stdin) if no file is specified
 
-2. **Decode**: The base64 content is decoded to binary data
+2. **Decompress**: The binary data is decompressed using:
+   - zlib format (flate with headers) - default
+   - Raw deflate format - when using the `-d` flag
 
-3. **Decompress**: The binary data is decompressed using flate
-
-4. **Output**: The decompressed content is written to standard output (stdout)
+3. **Output**: The decompressed content is written to standard output (stdout)
 
 ## Error Handling
 
 The tool will exit with an error message if:
 - The specified file cannot be opened
-- The input cannot be decoded as valid base64
-- The decoded data cannot be decompressed as flate
+- The input data cannot be processed (compressed/decompressed) as flate/deflate
+- The compression format doesn't match the selected mode (zlib vs raw deflate) during decompression
 - Any I/O operation fails
 
 ## Development

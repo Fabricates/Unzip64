@@ -1,3 +1,3 @@
-module github.com/fabricates/unzip64
+module github.com/fabricates/flate
 
 go 1.20

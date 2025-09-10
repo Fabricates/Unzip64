@@ -1,6 +1,6 @@
-# Makefile for unzip64
+# Makefile for flate
 
-BINARY_NAME=unzip64
+BINARY_NAME=flate
 GO_VERSION=1.21
 LDFLAGS=-ldflags="-s -w"
 
@@ -23,6 +23,8 @@ test:
 clean:
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_NAME)_test
+	rm -f unzip64  # Remove old binary name
+	rm -f unzip64_test  # Remove old test binary name
 	rm -rf dist/
 
 # Build for all platforms
@@ -49,8 +51,11 @@ lint:
 # Run the binary with test data
 .PHONY: demo
 demo: build
-	@echo "Testing with sample data..."
-	@echo "ykjNyclXKM8vyklRBAQAAP//" | ./$(BINARY_NAME)
+	@echo "Testing compression (default raw deflate):"
+	@echo "hello world!" | ./$(BINARY_NAME) | ./$(BINARY_NAME) -d
+	@echo ""
+	@echo "Testing zlib compression:"
+	@echo "hello world!" | ./$(BINARY_NAME) -z | ./$(BINARY_NAME) -d -z
 
 # Show help
 .PHONY: help

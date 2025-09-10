@@ -18,8 +18,8 @@
 go.work
 
 # Built binary
-unzip64
-unzip64_test
+flate
+flate_test
 
 # Build artifacts
 dist/
