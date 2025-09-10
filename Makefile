@@ -23,8 +23,8 @@ test:
 clean:
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_NAME)_test
-	rm -f unzip64  # Remove old binary name
-	rm -f unzip64_test  # Remove old test binary name
+	rm -f flate  # Remove old binary name
+	rm -f flate_test  # Remove old test binary name
 	rm -rf dist/
 
 # Build for all platforms

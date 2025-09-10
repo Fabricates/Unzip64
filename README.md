@@ -1,14 +1,6 @@
 # Flate
 
-A simple Go command line tool that compresses or decompresses data using flate/deflate compression from a f1. **Input**: The tool reads data from either:
-   - A file specified as a command line argument
-   - Standard input (stdin) if no file is specified
-
-2. **Process**: The data is processed using:
-   - **Compression** (default): Compress input using raw deflate or zlib format (-z flag)
-   - **Decompression** (-d flag): Decompress using raw deflate or zlib format (-z flag)
-
-3. **Output**: The processed content is written to standard output (stdout)din.
+A simple Go command line tool that compresses or decompresses data using flate/deflate compression from a file or stdin.
 
 ## Features
 
@@ -122,15 +114,15 @@ curl -s https://example.com/data.txt | ./flate -z | ./flate -d -z
 
 ## How it works
 
-1. **Input**: The tool reads compressed binary data from either:
+1. **Input**: The tool reads data from either:
    - A file specified as a command line argument
    - Standard input (stdin) if no file is specified
 
-2. **Decompress**: The binary data is decompressed using:
-   - zlib format (flate with headers) - default
-   - Raw deflate format - when using the `-d` flag
+2. **Process**: The data is processed using:
+   - **Compression** (default): Compress input using raw deflate or zlib format (-z flag)
+   - **Decompression** (-d flag): Decompress using raw deflate or zlib format (-z flag)
 
-3. **Output**: The decompressed content is written to standard output (stdout)
+3. **Output**: The processed content is written to standard output (stdout)
 
 ## Error Handling
 

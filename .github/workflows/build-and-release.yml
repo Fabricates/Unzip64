@@ -13,7 +13,7 @@ on:
 
 env:
   GO_VERSION: '1.21'
-  BINARY_NAME: 'unzip64'
+  BINARY_NAME: 'flate'
 
 jobs:
   test:
@@ -36,7 +36,7 @@ jobs:
     - name: Test basic functionality
       run: |
         go build -o ${{ env.BINARY_NAME }} .
-        echo "ykjNyclXKM8vyklRBAQAAP//" | ./${{ env.BINARY_NAME }} | grep -q "hello world!"
+        echo "hello world!" | ./${{ env.BINARY_NAME }} | ./${{ env.BINARY_NAME }} -d | grep -q "hello world!"
 
   build:
     name: Build Binaries
@@ -135,30 +135,36 @@ jobs:
         prerelease: ${{ steps.tag.outputs.IS_PRERELEASE }}
         files: release-assets/*
         body: |
-          ## Unzip64 - Base64 Flate Decoder
+          ## flate - Flate/Deflate Compression Tool
           
           This release contains pre-compiled binaries for multiple platforms.
           
           ### Usage
           ```bash
-          # Read from file
-          ./unzip64 input.txt
+          # Compress a file (default raw deflate)
+          ./flate input.txt > compressed.bin
           
-          # Read from stdin
-          echo "ykjNyclXKM8vyklRBAQAAP//" | ./unzip64
+          # Decompress 
+          ./flate -d compressed.bin
+          
+          # Compress with zlib format
+          echo "hello world!" | ./flate -z > compressed.zlib
+          
+          # Decompress zlib format
+          ./flate -d -z compressed.zlib
           ```
           
           ### Available Binaries
-          - `unzip64-linux-amd64.tar.gz` - Linux x86_64
-          - `unzip64-linux-arm64.tar.gz` - Linux ARM64
-          - `unzip64-darwin-amd64.tar.gz` - macOS Intel
-          - `unzip64-darwin-arm64.tar.gz` - macOS Apple Silicon
-          - `unzip64-windows-amd64.zip` - Windows x86_64
+          - `flate-linux-amd64.tar.gz` - Linux x86_64
+          - `flate-linux-arm64.tar.gz` - Linux ARM64
+          - `flate-darwin-amd64.tar.gz` - macOS Intel
+          - `flate-darwin-arm64.tar.gz` - macOS Apple Silicon
+          - `flate-windows-amd64.zip` - Windows x86_64
           
           ### Installation
           1. Download the appropriate binary for your platform
           2. Extract the archive
-          3. Make the binary executable (Linux/macOS): `chmod +x unzip64`
+          3. Make the binary executable (Linux/macOS): `chmod +x flate`
           4. Optionally, move to a directory in your PATH
           
           ---
